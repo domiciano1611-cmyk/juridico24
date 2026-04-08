@@ -2,20 +2,63 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Jurídico 24 - Online</title>
-    <style>
-        body { font-family: sans-serif; background: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 2rem; border-radius: 10px; shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
-        h1 { color: #2c3e50; }
-        .status { color: green; font-weight: bold; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jurídico 24 - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="card">
-        <h1>⚖️ Jurídico 24</h1>
-        <p>O sistema está <span class="status">ONLINE</span> no GitHub!</p>
-        <hr>
-        <p>Bem-vindo ao seu painel de controle jurídico.</p>
+<body class="bg-gray-100 font-sans">
+
+    <nav class="bg-slate-800 p-4 text-white flex justify-between items-center shadow-lg">
+        <h1 class="text-xl font-bold">⚖️ Jurídico 24</h1>
+        <span class="bg-green-500 px-3 py-1 rounded-full text-xs">Sistema Online</span>
+    </nav>
+
+    <div class="max-w-5xl mx-auto mt-10 p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
+                <p class="text-gray-500 text-sm uppercase">Processos Ativos</p>
+                <h2 class="text-3xl font-bold text-gray-800">12</h2>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-yellow-500">
+                <p class="text-gray-500 text-sm uppercase">Prazos Próximos</p>
+                <h2 class="text-3xl font-bold text-gray-800">03</h2>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
+                <p class="text-gray-500 text-sm uppercase">Honorários Recebidos</p>
+                <h2 class="text-3xl font-bold text-gray-800">R$ 4.500</h2>
+            </div>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="p-4 bg-gray-50 border-b flex justify-between items-center">
+                <h3 class="font-bold text-gray-700">Processos Recentes</h3>
+                <button onclick="alert('Funcionalidade de cadastro em breve!')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-sm">
+                    + Novo Processo
+                </button>
+            </div>
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="text-gray-600 uppercase text-xs">
+                        <th class="p-4 border-b">Número</th>
+                        <th class="p-4 border-b">Cliente</th>
+                        <th class="p-4 border-b">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-4 border-b text-sm">0012345-67.2024</td>
+                        <td class="p-4 border-b text-sm text-gray-600">João dos Santos</td>
+                        <td class="p-4 border-b text-sm"><span class="text-blue-600 font-medium">Em Andamento</span></td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-4 border-b text-sm">0098765-43.2024</td>
+                        <td class="p-4 border-b text-sm text-gray-600">Maria Oliveira</td>
+                        <td class="p-4 border-b text-sm"><span class="text-orange-600 font-medium">Aguardando Prazo</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+
 </body>
 </html>

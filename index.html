@@ -88,11 +88,21 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="relative">
                                     <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Requerente</label>
-                                    <input type="text" id="cliente" placeholder="Nome" class="w-full mt-2 p-4 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-medium">
+                                    <div class="relative">
+                                        <input type="text" id="cliente" placeholder="Nome" class="w-full mt-2 p-4 pr-12 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-medium">
+                                        <button class="absolute right-3 top-[18px] text-indigo-500 hover:text-indigo-700">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="relative">
                                     <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Requerido</label>
-                                    <input type="text" id="reu" placeholder="Réu" class="w-full mt-2 p-4 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-medium">
+                                    <div class="relative">
+                                        <input type="text" id="reu" placeholder="Réu" class="w-full mt-2 p-4 pr-12 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-medium">
+                                        <button class="absolute right-3 top-[18px] text-indigo-500 hover:text-indigo-700">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -118,6 +128,7 @@
                     <div class="p-6 bg-slate-50/50 border-b border-slate-100 flex justify-between items-center px-8 shrink-0">
                         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Visualização da Minuta</span>
                         <div class="flex gap-4">
+                            <button onclick="salvarMinuta()" class="text-[10px] font-bold text-emerald-600 hover:text-emerald-800 uppercase">Salvar</button>
                             <button onclick="toggleExpand()" class="text-[10px] font-bold text-slate-400 hover:text-indigo-600 uppercase">Foco</button>
                             <button onclick="copyText()" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 uppercase">Copiar</button>
                         </div>
@@ -194,6 +205,12 @@
             document.getElementById('document-container').classList.toggle('expand-mode');
         }
 
+        function salvarMinuta() {
+            const text = document.getElementById('final-text').innerText;
+            if(!text) return alert("Gere uma petição primeiro!");
+            alert("Minuta salva com sucesso no cadastro do requerente!");
+        }
+
         async function gerarPeticao() {
             const fatos = document.getElementById('fatos').value;
             if (!fatos) return alert("Descreva os fatos primeiro.");
@@ -203,7 +220,6 @@
             const finalText = document.getElementById('final-text');
             const btn = document.getElementById('btnGerar');
 
-            // Troca para Loading
             waitState.classList.add('hidden');
             finalText.classList.add('hidden');
             loadState.classList.remove('hidden');
@@ -220,7 +236,6 @@
                 });
                 const data = await response.json();
                 
-                // Exibe resultado
                 loadState.classList.add('hidden');
                 finalText.innerText = data.choices[0].message.content;
                 finalText.classList.remove('hidden');

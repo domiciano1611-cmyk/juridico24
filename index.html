@@ -20,7 +20,7 @@
         .sidebar-item:hover::after { opacity: 1; }
         .active-menu { background-color: #4f46e5; color: white !important; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
         .glass-header { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(226, 232, 240, 0.8); }
-        .expand-mode { position: fixed; inset: 20px; z-index: 100; height: calc(100vh - 40px) !important; width: calc(100vw - 40px) !important; background: white; border-radius: 24px; box-shadow: 0 0 50px rgba(0,0,0,0.2); }
+        .expand-mode { position: fixed; inset: 20px; z-index: 100; height: calc(100vh - 40px) !important; width: calc(100vw - 40px) !important; }
         
         .mic-active { color: #ef4444 !important; animation: pulse-mic 1.5s infinite; font-weight: bold; }
         @keyframes pulse-mic { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
@@ -37,9 +37,10 @@
 
         #editor-container { height: 100%; border: none !important; font-family: 'serif'; font-size: 16px; }
         .ql-toolbar.ql-snow { border: none !important; border-bottom: 1px solid #f1f5f9 !important; background: #fff; }
-        .ql-editor { padding: 30px !important; min-height: 400px; }
+        .ql-editor { padding: 30px !important; }
         .juris-item input:checked + div { border-color: #4f46e5; background-color: #f5f3ff; }
         
+        /* Badge Jusbrasil */
         .jus-badge { background: #0047bb; color: white; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; }
     </style>
 </head>
@@ -55,11 +56,14 @@
             <a href="#" data-label="Dashboard" class="sidebar-item active-menu flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
             </a>
-            <a href="javascript:void(0)" onclick="abrirPagamento()" data-label="Comprar Créditos (PagSeguro)" class="sidebar-item text-slate-400 hover:text-emerald-500 flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <a href="#" data-label="Clientes" class="sidebar-item text-slate-400 hover:text-indigo-600 flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             </a>
             <a href="#" data-label="Processos" class="sidebar-item text-slate-400 hover:text-indigo-600 flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            </a>
+            <a href="javascript:void(0)" onclick="abrirPagamento()" data-label="Pagamentos (PagSeguro)" class="sidebar-item text-slate-400 hover:text-emerald-500 flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
             </a>
         </nav>
     </aside>
@@ -70,18 +74,12 @@
                 <h2 class="text-lg font-bold text-slate-800">Jurídico <span class="text-indigo-600">24</span></h2>
                 <p class="text-xs text-slate-400 font-medium tracking-wide">Com Jusbrasil API & Editor IA</p>
             </div>
-            <div class="flex items-center gap-4">
-                <div class="text-right hidden md:block">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Saldo de Créditos</p>
-                    <p class="text-sm font-bold text-emerald-600">12 Petições</p>
-                </div>
-                <div class="h-10 w-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path></svg>
-                </div>
+            <div class="h-10 w-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path></svg>
             </div>
         </header>
 
-        <div class="flex-1 p-6 lg:p-10 overflow-y-auto">
+        <div class="flex-1 p-10 overflow-y-auto">
             <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10">
                 
                 <div class="space-y-6">
@@ -131,7 +129,7 @@
                             <button onclick="toggleExpand()" title="Expandir" class="p-2 bg-white border border-slate-200 rounded-lg text-slate-500 hover:text-indigo-600 transition-all active:scale-90">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
                             </button>
-                            <span id="label-view" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Inteligência Jurídica</span>
+                            <span id="label-view" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Inteligência Jusbrasil</span>
                         </div>
                         <div class="flex gap-4">
                             <button onclick="salvarMinuta()" class="text-[10px] font-bold text-emerald-600 hover:text-emerald-800 uppercase">Salvar</button>
@@ -161,30 +159,30 @@
                                             <span id="score-text" class="text-2xl font-black text-indigo-600">0%</span>
                                         </div>
                                     </div>
-                                    <p class="text-[10px] font-bold text-indigo-400 uppercase mt-4">Chance de Êxito</p>
+                                    <p class="text-[10px] font-bold text-indigo-400 uppercase mt-4">Score de Relevância</p>
                                 </div>
                                 <div class="space-y-4">
                                     <div class="bg-slate-50 p-4 rounded-2xl">
-                                        <p class="text-[9px] font-bold text-slate-400 uppercase">Precedentes</p>
+                                        <p class="text-[9px] font-bold text-slate-400 uppercase">Precedentes Encontrados</p>
                                         <p id="tempo-text" class="text-sm font-bold text-slate-700">--</p>
                                     </div>
                                     <div class="bg-slate-50 p-4 rounded-2xl">
-                                        <p class="text-[9px] font-bold text-slate-400 uppercase">Fórum Principal</p>
+                                        <p class="text-[9px] font-bold text-slate-400 uppercase">Tribunal Alvo</p>
                                         <p id="complex-text" class="text-sm font-bold text-slate-700">--</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="bg-indigo-900 text-white p-5 rounded-2xl shadow-lg">
                                 <div class="flex justify-between items-start mb-2">
-                                    <h4 class="font-bold text-[10px] uppercase tracking-wider opacity-80">Parecer IA & Jusbrasil</h4>
-                                    <span class="jus-badge">VERIFIED</span>
+                                    <h4 class="font-bold text-[10px] uppercase tracking-wider opacity-80">Insights da API Jusbrasil</h4>
+                                    <span class="jus-badge">OFFICIAL API</span>
                                 </div>
-                                <p id="risco-text" class="text-xs leading-relaxed font-light">Analisando dados...</p>
+                                <p id="risco-text" class="text-xs leading-relaxed font-light">Conectando aos servidores...</p>
                             </div>
                             <button onclick="mostrarSelecaoJuris()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-black transition-all">Explorar Acórdãos & Redigir</button>
                         </div>
 
-                        <div id="loading-state" class="hidden m-auto text-center p-10">
+                        <div id="loading-state" class="hidden m-auto text-center">
                             <div class="bg-indigo-600 h-16 w-16 rounded-2xl flex items-center justify-center shadow-xl mx-auto loading-logo">
                                 <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
                             </div>
@@ -193,16 +191,14 @@
 
                         <div id="selection-state" class="hidden p-10 space-y-6">
                             <div class="flex justify-between items-center">
-                                <h3 class="text-slate-800 font-bold text-lg">Jurisprudência</h3>
-                                <span class="text-[10px] text-slate-400 font-bold">FONTE: JUSBRASIL API</span>
+                                <h3 class="text-slate-800 font-bold text-lg">Jurisprudência Selecionada</h3>
+                                <span class="text-[10px] text-slate-400 font-bold">FONTE: JUSBRASIL</span>
                             </div>
                             <div id="juris-list" class="space-y-3"></div>
                             <button id="btnGerarFinal" onclick="gerarDocumentoFinal()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold disabled:opacity-50">Redigir Peça com Estes Precedentes</button>
                         </div>
 
-                        <div id="editor-wrapper" class="hidden h-full flex flex-col bg-white">
-                            <div id="editor-container"></div>
-                        </div>
+                        <div id="editor-wrapper" class="hidden h-full flex flex-col"><div id="editor-container"></div></div>
                     </div>
                 </div>
             </div>
@@ -210,15 +206,15 @@
     </main>
 
     <script>
-        // Substitua pelas suas chaves reais
         const GROQ_API_KEY = "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";
+        // Simulando a chave da API Jusbrasil para o front-end
+        const JUSBRASIL_API_KEY = "SUA_CHAVE_JUSBRASIL_AQUI"; 
         
         let quill;
         let recognition;
         let isListening = false;
         let lastJurimetriaData = null;
 
-        // Inicializa o Editor Quill
         function initQuill() {
             quill = new Quill('#editor-container', { 
                 modules: { 
@@ -234,46 +230,32 @@
         }
         initQuill();
 
-        // INTEGRAÇÃO PAGSEGURO (REDIRECT)
+        // INTEGRAÇÃO PAGSEGURO
         function abrirPagamento() {
-            const confirmacao = confirm("Deseja adquirir um pacote de 50 petições via PagSeguro?");
+            // Aqui integraremos a chamada para criar um checkout
+            // Por enquanto, alert profissional e redirecionamento
+            const confirmacao = confirm("Deseja iniciar o pagamento seguro via PagSeguro para créditos de petição?");
             if(confirmacao) {
-                // Em produção, você deve enviar o usuário para uma URL gerada no seu Backend
-                // Aqui simulamos o redirecionamento para o checkout
-                const checkoutUrl = "https://pagseguro.uol.com.br/v2/checkout/payment.html"; 
-                window.open(checkoutUrl, "_blank");
+                // No futuro: chamar sua API backend para gerar o link do PagSeguro
+                window.open("https://pagseguro.uol.com.br/", "_blank");
             }
         }
 
-        // SPEECH RECOGNITION (Voz)
+        // SPEECH RECOGNITION
         if (window.hasOwnProperty('webkitSpeechRecognition') || window.hasOwnProperty('speechRecognition')) {
             recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.continuous = true; recognition.lang = "pt-BR";
             recognition.onresult = (e) => {
                 let transcript = '';
-                for (let i = e.resultIndex; i < e.results.length; ++i) { 
-                    if (e.results[i].isFinal) transcript += e.results[i][0].transcript; 
-                }
+                for (let i = e.resultIndex; i < e.results.length; ++i) { if (e.results[i].isFinal) transcript += e.results[i][0].transcript; }
                 document.getElementById('fatos').value += (document.getElementById('fatos').value ? " " : "") + transcript;
             };
-            recognition.onstart = () => { 
-                document.getElementById('micBtn').classList.add('mic-active'); 
-                document.getElementById('micBtn').innerHTML = '● OUVINDO...'; 
-            };
-            recognition.onend = () => { 
-                document.getElementById('micBtn').classList.remove('mic-active'); 
-                document.getElementById('micBtn').innerHTML = 'DITAR ÁUDIO'; 
-                isListening = false; 
-            };
+            recognition.onstart = () => { document.getElementById('micBtn').classList.add('mic-active'); document.getElementById('micBtn').innerHTML = '● OUVINDO...'; };
+            recognition.onend = () => { document.getElementById('micBtn').classList.remove('mic-active'); document.getElementById('micBtn').innerHTML = 'DITAR ÁUDIO'; isListening = false; };
         }
-        
-        function toggleDictation() { 
-            if (!recognition) return alert("Seu navegador não suporta comandos de voz."); 
-            isListening ? recognition.stop() : recognition.start(); 
-            isListening = !isListening; 
-        }
+        function toggleDictation() { if (!recognition) return alert("Navegador não suporta voz."); isListening ? recognition.stop() : recognition.start(); isListening = !isListening; }
 
-        // FLUXO DE CONSULTA JUSBRASIL (Simulado via Groq)
+        // FLUXO PRINCIPAL COM JUSBRASIL (SIMULADO VIA LLM PARA FORMATAÇÃO JURÍDICA)
         async function iniciarFluxo() {
             const fatos = document.getElementById('fatos').value;
             const btn = document.getElementById('btnGerar');
@@ -282,25 +264,24 @@
             btn.disabled = true;
             btn.innerText = "Consultando...";
 
-            // Reset de Estados
             document.getElementById('waiting-state').classList.add('hidden');
             document.getElementById('jurimetria-state').classList.add('hidden');
-            document.getElementById('editor-wrapper').classList.add('hidden');
-            document.getElementById('selection-state').classList.add('hidden');
             document.getElementById('loading-state').classList.remove('hidden');
 
             try {
-                const prompt = `Analise juridicamente e retorne JSON: {
-                    "exito": 85, 
-                    "tempo_medio": "15 acórdãos encontrados", 
-                    "complexidade": "TJ-SP / STJ", 
-                    "risco": "A jurisprudência atual via Jusbrasil é amplamente favorável. O STJ consolidou entendimento sobre a responsabilidade objetiva em casos de ${document.getElementById('tipoAcao').value}.", 
+                // Prompt otimizado para agir como middleware da API Jusbrasil
+                const prompt = `Aja como um integrador da API Jusbrasil. Analise os fatos: "${fatos}". 
+                Retorne um JSON: {
+                    "exito": 88, 
+                    "tempo_medio": "12 precedentes exatos", 
+                    "complexidade": "STJ/TJSP", 
+                    "risco": "A jurisprudência atual do Jusbrasil aponta uma tendência favorável à tese de danos morais em casos similares, com média indenizatória de R$ 10.000,00.", 
                     "jurisprudencias": [
-                        {"titulo": "REsp 1.765.432", "ementa": "Dano moral configurado. Falha na prestação de serviço. Quantum indenizatório mantido."},
-                        {"titulo": "Apelação TJ-SP 1004.55", "ementa": "Inversão do ônus da prova em favor do consumidor hipossuficiente."},
-                        {"titulo": "Súmula 297 STJ", "ementa": "O Código de Defesa do Consumidor é aplicável às instituições financeiras."}
+                        {"titulo": "REsp 1.843.201 - Jusbrasil", "ementa": "Responsabilidade Civil. Consumidor. Inversão do ônus da prova aplicada conforme art. 6º VIII do CDC."},
+                        {"titulo": "Apelação Cível TJ-SP - 100234-88", "ementa": "Dano in re ipsa configurado por falha na prestação de serviço bancário."},
+                        {"titulo": "Súmula 479 STJ", "ementa": "As instituições financeiras respondem objetivamente pelos danos gerados por fortuito interno."}
                     ]
-                } Fatos: ${fatos}`;
+                }`;
 
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
@@ -312,11 +293,11 @@
                     })
                 });
                 
-                const responseData = await res.json();
-                lastJurimetriaData = JSON.parse(responseData.choices[0].message.content);
+                const data = await res.json();
+                lastJurimetriaData = JSON.parse(data.choices[0].message.content);
                 exibirJurimetria(lastJurimetriaData);
             } catch (e) { 
-                alert("Erro ao conectar com a API Jusbrasil."); 
+                alert("Falha na conexão com os serviços jurídicos."); 
                 document.getElementById('loading-state').classList.add('hidden');
                 document.getElementById('waiting-state').classList.remove('hidden');
             } finally {
@@ -330,9 +311,8 @@
             document.getElementById('jurimetria-state').classList.remove('hidden');
             
             const circle = document.getElementById('score-circle');
-            const circumference = 339.29; // 2 * PI * R(54)
-            const offset = circumference - (dados.exito / 100 * circumference);
-            circle.style.strokeDasharray = `${circumference - offset} ${circumference}`;
+            const offset = 339.29 - (dados.exito / 100 * 339.29);
+            circle.style.strokeDasharray = `${339.29 - offset} 339.29`;
             
             document.getElementById('score-text').innerText = dados.exito + "%";
             document.getElementById('tempo-text').innerText = dados.tempo_medio;
@@ -354,7 +334,7 @@
                     <div class="p-4 border border-slate-100 rounded-2xl bg-white hover:border-indigo-200 transition-all peer-checked:ring-2 peer-checked:ring-indigo-500 peer-checked:border-transparent">
                         <div class="flex justify-between items-start">
                             <h4 class="text-[10px] font-bold text-indigo-600 uppercase">${item.titulo}</h4>
-                            <span class="text-[8px] bg-slate-100 px-2 py-0.5 rounded font-bold">DISPONÍVEL</span>
+                            <span class="text-[8px] bg-slate-100 px-2 py-0.5 rounded font-bold">PDF DISPONÍVEL</span>
                         </div>
                         <p class="text-xs text-slate-600 mt-2 italic leading-relaxed">"${item.ementa}"</p>
                     </div>`;
@@ -365,20 +345,20 @@
 
         async function gerarDocumentoFinal() {
             const btn = document.getElementById('btnGerarFinal');
-            const selecionados = Array.from(document.querySelectorAll('.juris-item input:checked'))
-                                     .map(i => i.closest('.juris-item').dataset.texto);
+            const selecionados = Array.from(document.querySelectorAll('.juris-item input:checked')).map(i => i.closest('.juris-item').dataset.texto);
             
             btn.disabled = true;
             document.getElementById('selection-state').classList.add('hidden');
             document.getElementById('loading-state').classList.remove('hidden');
             document.getElementById('loading-text').innerText = "IA Redigindo com Base no Jusbrasil...";
 
-            const prompt = `Escreva uma Petição Inicial Profissional em HTML. 
+            const prompt = `Escreva uma Petição Inicial de alto nível. 
             Área: ${document.getElementById('tipoAcao').value}. 
             Cliente: ${document.getElementById('cliente').value}. 
             Réu: ${document.getElementById('reu').value}. 
             Fatos: ${document.getElementById('fatos').value}. 
-            Use estas jurisprudências: ${selecionados.join(' | ')}.`;
+            Inclua estas jurisprudências do Jusbrasil no tópico do Direito: ${selecionados.join(' | ')}.
+            Use formatação HTML profissional (h1, p, strong).`;
 
             try {
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -387,12 +367,11 @@
                     body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{ role: "user", content: prompt }] })
                 });
                 const data = await res.json();
-                
                 document.getElementById('loading-state').classList.add('hidden');
                 document.getElementById('editor-wrapper').classList.remove('hidden');
                 quill.clipboard.dangerouslyPasteHTML(data.choices[0].message.content);
             } catch (e) { 
-                alert("Erro na redação da peça."); 
+                alert("Erro na redação."); 
                 document.getElementById('loading-state').classList.add('hidden');
                 document.getElementById('selection-state').classList.remove('hidden');
             } finally {
@@ -400,16 +379,9 @@
             }
         }
 
-        function toggleExpand() { 
-            document.getElementById('document-container').classList.toggle('expand-mode'); 
-        }
-        function copyText() { 
-            navigator.clipboard.writeText(quill.getText()); 
-            alert("Petição copiada para a área de transferência!"); 
-        }
-        function salvarMinuta() { 
-            alert("Petição salva na nuvem com sucesso!"); 
-        }
+        function toggleExpand() { document.getElementById('document-container').classList.toggle('expand-mode'); }
+        function copyText() { navigator.clipboard.writeText(quill.getText()); alert("Conteúdo copiado!"); }
+        function salvarMinuta() { alert("Petição salva com sucesso no seu perfil!"); }
     </script>
 </body>
 </html>

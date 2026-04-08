@@ -41,6 +41,10 @@
         .juris-item input:checked + div { border-color: #4f46e5; background-color: #f5f3ff; }
         
         .jus-badge { background: #0047bb; color: white; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; }
+
+        /* Estilo dos Botões de Área */
+        .area-btn { @apply border-2 border-slate-100 bg-slate-50 text-slate-500 py-3 px-4 rounded-2xl text-xs font-bold transition-all duration-200 hover:border-indigo-200; }
+        .area-btn.active { @apply border-indigo-600 bg-indigo-600 text-white shadow-lg shadow-indigo-100; }
     </style>
 </head>
 <body class="bg-[#fcfcfd] text-slate-800 flex h-screen overflow-hidden">
@@ -105,12 +109,13 @@
                             <div class="space-y-6">
                                 <div>
                                     <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Área do Direito</label>
-                                    <select id="tipoAcao" class="w-full mt-2 p-4 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm font-semibold">
-                                        <option value="Trabalhista">Direito do Trabalho</option>
-                                        <option value="Cível">Direito Cível</option>
-                                        <option value="Família">Direito de Família</option>
-                                        <option value="Consumidor">Direito do Consumidor</option>
-                                    </select>
+                                    <input type="hidden" id="tipoAcao" value="Trabalhista">
+                                    <div class="grid grid-cols-2 gap-3 mt-3">
+                                        <button type="button" onclick="selectArea(this, 'Trabalhista')" class="area-btn active">Trabalhista</button>
+                                        <button type="button" onclick="selectArea(this, 'Família')" class="area-btn">Família</button>
+                                        <button type="button" onclick="selectArea(this, 'Cível')" class="area-btn">Civil</button>
+                                        <button type="button" onclick="selectArea(this, 'Consumidor')" class="area-btn">Consumidor</button>
+                                    </div>
                                 </div>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -261,6 +266,13 @@
             });
         }
         initQuill();
+
+        // Função para selecionar a Área do Direito
+        function selectArea(btn, value) {
+            document.querySelectorAll('.area-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('tipoAcao').value = value;
+        }
 
         function abrirPagamento() {
             const confirmacao = confirm("Deseja iniciar o pagamento seguro via PagSeguro para créditos de petição?");

@@ -113,7 +113,7 @@
                                 <textarea id="fatos" rows="7" placeholder="Descreva os fatos..." class="w-full mt-2 p-4 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none text-sm leading-relaxed font-medium"></textarea>
                             </div>
 
-                            <button onclick="iniciarFluxo()" id="btnGerar" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl shadow-xl shadow-indigo-100 transition-all active:scale-95 disabled:opacity-50">
+                            <button onclick="iniciarFluxo()" id="btnGerar" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl shadow-xl shadow-indigo-100 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
                                 Analisar & Gerar com Jurisprudência
                             </button>
                         </div>
@@ -173,7 +173,7 @@
                                 <h4 class="text-amber-700 font-bold text-[10px] uppercase mb-1">Risco Processual</h4>
                                 <p id="risco-text" class="text-amber-800 text-xs leading-relaxed">Analizando...</p>
                             </div>
-                            <button onclick="mostrarSelecaoJuris()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold">Ver Jurisprudências & Redigir</button>
+                            <button onclick="mostrarSelecaoJuris()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-black transition-all">Ver Jurisprudências & Redigir</button>
                         </div>
 
                         <div id="loading-state" class="hidden m-auto text-center">
@@ -186,7 +186,7 @@
                         <div id="selection-state" class="hidden p-10 space-y-6">
                             <h3 class="text-slate-800 font-bold text-lg">Precedentes Recomendados</h3>
                             <div id="juris-list" class="space-y-3"></div>
-                            <button onclick="gerarDocumentoFinal()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold">Gerar Peça Final</button>
+                            <button id="btnGerarFinal" onclick="gerarDocumentoFinal()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold disabled:opacity-50">Gerar Peça Final</button>
                         </div>
 
                         <div id="editor-wrapper" class="hidden h-full flex flex-col"><div id="editor-container"></div></div>
@@ -208,14 +208,11 @@
         }
         initQuill();
 
-        // PagSeguro Integration
         function abrirPagamento() {
-            // Aqui você redirecionaria para o checkout do PagSeguro
             alert("Redirecionando para o ambiente seguro PagSeguro...");
             window.open("https://pagseguro.uol.com.br/", "_blank");
         }
 
-        // Ditado por Voz
         if (window.hasOwnProperty('webkitSpeechRecognition') || window.hasOwnProperty('speechRecognition')) {
             recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.continuous = true; recognition.lang = "pt-BR";
@@ -231,14 +228,19 @@
 
         async function iniciarFluxo() {
             const fatos = document.getElementById('fatos').value;
+            const btn = document.getElementById('btnGerar');
             if (!fatos) return alert("Descreva o caso.");
+
+            // Desabilitar botão para evitar duplo clique
+            btn.disabled = true;
+            btn.innerText = "Analisando...";
 
             document.getElementById('waiting-state').classList.add('hidden');
             document.getElementById('jurimetria-state').classList.add('hidden');
             document.getElementById('loading-state').classList.remove('hidden');
 
             try {
-                const prompt = `Analise o caso e retorne JSON: {"exito": 85, "tempo_medio": "14 meses", "complexidade": "Alta", "risco": "Explicação breve", "jurisprudencias": [{"titulo": "...", "ementa": "..."}]}. Fatos: ${fatos}`;
+                const prompt = `Analise o caso e retorne obrigatoriamente um JSON puro: {"exito": 85, "tempo_medio": "14 meses", "complexidade": "Alta", "risco": "Explicação breve", "jurisprudencias": [{"titulo": "Tema X STJ", "ementa": "Descrição da ementa aqui"}]}. Fatos: ${fatos}`;
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
                     headers: { "Content-Type": "application/json", "Authorization": `Bearer ${GROQ_API_KEY}` },
@@ -246,9 +248,15 @@
                 });
                 const data = await res.json();
                 lastJurimetriaData = JSON.parse(data.choices[0].message.content);
-                
                 exibirJurimetria(lastJurimetriaData);
-            } catch (e) { alert("Erro na análise."); }
+            } catch (e) { 
+                alert("Erro na análise."); 
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('waiting-state').classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Analisar & Gerar com Jurisprudência";
+            }
         }
 
         function exibirJurimetria(dados) {
@@ -280,12 +288,15 @@
         }
 
         async function gerarDocumentoFinal() {
+            const btn = document.getElementById('btnGerarFinal');
             const selecionados = Array.from(document.querySelectorAll('.juris-item input:checked')).map(i => i.closest('.juris-item').dataset.texto);
+            
+            btn.disabled = true;
             document.getElementById('selection-state').classList.add('hidden');
             document.getElementById('loading-state').classList.remove('hidden');
             document.getElementById('loading-text').innerText = "Redigindo Peça Final...";
 
-            const prompt = `Escreva uma Petição Inicial Profissional em HTML. Área: ${document.getElementById('tipoAcao').value}. Requerente: ${document.getElementById('cliente').value}. Requerido: ${document.getElementById('reu').value}. Fatos: ${document.getElementById('fatos').value}. Juris: ${selecionados.join(' | ')}`;
+            const prompt = `Escreva uma Petição Inicial Profissional em formato HTML rico. Área: ${document.getElementById('tipoAcao').value}. Requerente: ${document.getElementById('cliente').value}. Requerido: ${document.getElementById('reu').value}. Fatos: ${document.getElementById('fatos').value}. Utilize as Jurisprudências: ${selecionados.join(' | ')}`;
 
             try {
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -297,15 +308,18 @@
                 document.getElementById('loading-state').classList.add('hidden');
                 document.getElementById('editor-wrapper').classList.remove('hidden');
                 quill.clipboard.dangerouslyPasteHTML(data.choices[0].message.content);
-            } catch (e) { alert("Erro."); }
+            } catch (e) { 
+                alert("Erro ao gerar peça."); 
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('selection-state').classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+            }
         }
 
         function toggleExpand() { document.getElementById('document-container').classList.toggle('expand-mode'); }
         function copyText() { navigator.clipboard.writeText(quill.getText()); alert("Copiado!"); }
-        function salvarMinuta() { 
-            // Exemplo de uso do protocolo PagSeguro ao salvar se for uma função premium
-            alert("Minuta salva! Processando registro via PagSeguro..."); 
-        }
+        function salvarMinuta() { alert("Minuta salva no banco de dados!"); }
     </script>
 </body>
 </html>

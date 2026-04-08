@@ -18,7 +18,7 @@
         .active-menu { background-color: #4f46e5; color: white !important; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
         .glass-header { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(226, 232, 240, 0.8); }
         .expand-mode { position: fixed; inset: 20px; z-index: 100; height: calc(100vh - 40px) !important; width: calc(100vw - 40px) !important; }
-        .mic-active { color: #ef4444 !important; animation: pulse 1.5s infinite; }
+        .mic-active { color: #ef4444 !important; animation: pulse 1.5s infinite; font-weight: bold; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
@@ -95,7 +95,7 @@
                             <div class="relative">
                                 <div class="flex justify-between items-center ml-1">
                                     <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Fatos do Caso</label>
-                                    <button onclick="startDictation()" id="micBtn" class="text-indigo-400 hover:text-indigo-600 transition-all flex items-center gap-1 text-[10px] font-bold">
+                                    <button onclick="toggleDictation()" id="micBtn" class="text-indigo-400 hover:text-indigo-600 transition-all flex items-center gap-1 text-[10px] font-bold">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
                                         DITAR ÁUDIO
                                     </button>
@@ -131,31 +131,67 @@
 
     <script>
         const GROQ_API_KEY = "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";
+        
+        // LÓGICA DE DITADO MELHORADA
+        let recognition;
+        let isListening = false;
 
-        // FUNÇÃO DE DITADO POR VOZ
-        function startDictation() {
-            if (window.hasOwnProperty('webkitSpeechRecognition') || window.hasOwnProperty('speechRecognition')) {
-                const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-                const micBtn = document.getElementById('micBtn');
-                const fatosField = document.getElementById('fatos');
+        if (window.hasOwnProperty('webkitSpeechRecognition') || window.hasOwnProperty('speechRecognition')) {
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = "pt-BR";
 
-                recognition.continuous = false;
-                recognition.interimResults = false;
-                recognition.lang = "pt-BR";
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                let finalTranscript = '';
 
-                recognition.onstart = () => { micBtn.classList.add('mic-active'); micBtn.innerHTML = 'OUVINDO...'; };
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
                 
-                recognition.onresult = (e) => {
-                    const transcript = e.results[0][0].transcript;
-                    fatosField.value += (fatosField.value ? " " : "") + transcript;
-                    micBtn.classList.remove('mic-active');
-                    micBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg> DITAR ÁUDIO';
-                };
+                // Escreve o texto final no campo conforme as pausas ocorrem
+                if (finalTranscript) {
+                    const fatosField = document.getElementById('fatos');
+                    fatosField.value += (fatosField.value ? " " : "") + finalTranscript;
+                }
+            };
 
-                recognition.onerror = () => { micBtn.classList.remove('mic-active'); micBtn.innerHTML = 'DITAR ÁUDIO'; };
-                recognition.start();
+            recognition.onstart = () => {
+                const micBtn = document.getElementById('micBtn');
+                micBtn.classList.add('mic-active');
+                micBtn.innerHTML = '● OUVINDO (CLIQUE P/ PARAR)';
+            };
+
+            recognition.onend = () => {
+                const micBtn = document.getElementById('micBtn');
+                micBtn.classList.remove('mic-active');
+                micBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg> DITAR ÁUDIO';
+                isListening = false;
+            };
+
+            recognition.onerror = (event) => {
+                console.error("Erro de reconhecimento: ", event.error);
+                isListening = false;
+            };
+        }
+
+        function toggleDictation() {
+            if (!recognition) {
+                alert("Navegador não suportado.");
+                return;
+            }
+
+            if (isListening) {
+                recognition.stop();
+                isListening = false;
             } else {
-                alert("Seu navegador não suporta reconhecimento de voz.");
+                recognition.start();
+                isListening = true;
             }
         }
 

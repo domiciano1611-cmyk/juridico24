@@ -40,7 +40,6 @@
         .ql-editor { padding: 30px !important; }
         .juris-item input:checked + div { border-color: #4f46e5; background-color: #f5f3ff; }
         
-        /* Badge Jusbrasil */
         .jus-badge { background: #0047bb; color: white; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; }
     </style>
 </head>
@@ -53,16 +52,16 @@
             </div>
         </div>
         <nav class="flex-1 space-y-4 mt-4 w-full px-4 text-center">
-            <a href="#" data-label="Dashboard" class="sidebar-item active-menu flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            <a href="#" data-label="Dashboard" class="sidebar-item text-slate-400 hover:text-indigo-600 flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+            </a>
+            <a href="#" data-label="Criar Peça" class="sidebar-item active-menu flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
             </a>
             <a href="#" data-label="Clientes" class="sidebar-item text-slate-400 hover:text-indigo-600 flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             </a>
-            <a href="#" data-label="Processos" class="sidebar-item text-slate-400 hover:text-indigo-600 flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-            </a>
-            <a href="javascript:void(0)" onclick="abrirPagamento()" data-label="Pagamentos (PagSeguro)" class="sidebar-item text-slate-400 hover:text-emerald-500 flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
+            <a href="javascript:void(0)" onclick="abrirPagamento()" data-label="Pagamentos" class="sidebar-item text-slate-400 hover:text-emerald-500 flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
             </a>
         </nav>
@@ -74,8 +73,26 @@
                 <h2 class="text-lg font-bold text-slate-800">Jurídico <span class="text-indigo-600">24</span></h2>
                 <p class="text-xs text-slate-400 font-medium tracking-wide">Inteligência Artificial e Jurisprudências</p>
             </div>
-            <div class="h-10 w-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400">
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path></svg>
+            
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
+                    <div class="text-right">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase leading-none">Saldo Petições</p>
+                        <p class="text-sm font-bold text-indigo-600">12 disponíveis</p>
+                    </div>
+                    <button onclick="abrirPagamento()" class="bg-white p-1.5 rounded-lg shadow-sm hover:text-indigo-600 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    </button>
+                </div>
+
+                <button class="relative p-2 text-slate-400 hover:text-indigo-600 transition-colors">
+                    <div class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></div>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                </button>
+
+                <div class="h-10 w-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path></svg>
+                </div>
             </div>
         </header>
 
@@ -203,11 +220,26 @@
                 </div>
             </div>
         </div>
+
+        <footer class="h-12 bg-white border-t border-slate-100 px-10 flex items-center justify-between shrink-0 text-[10px] font-medium text-slate-400 uppercase tracking-widest">
+            <div class="flex items-center gap-4">
+                <span class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> 
+                    Sistemas Online
+                </span>
+                <span class="border-l border-slate-200 h-3"></span>
+                <span>API Jusbrasil: Conectado</span>
+            </div>
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-indigo-600 transition-colors">Privacidade</a>
+                <a href="#" class="hover:text-indigo-600 transition-colors">Suporte 24h</a>
+                <span>© 2026 Jurídico 24</span>
+            </div>
+        </footer>
     </main>
 
     <script>
         const GROQ_API_KEY = "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";
-        // Simulando a chave da API Jusbrasil para o front-end
         const JUSBRASIL_API_KEY = "SUA_CHAVE_JUSBRASIL_AQUI"; 
         
         let quill;
@@ -230,18 +262,13 @@
         }
         initQuill();
 
-        // INTEGRAÇÃO PAGSEGURO
         function abrirPagamento() {
-            // Aqui integraremos a chamada para criar um checkout
-            // Por enquanto, alert profissional e redirecionamento
             const confirmacao = confirm("Deseja iniciar o pagamento seguro via PagSeguro para créditos de petição?");
             if(confirmacao) {
-                // No futuro: chamar sua API backend para gerar o link do PagSeguro
                 window.open("https://pagseguro.uol.com.br/", "_blank");
             }
         }
 
-        // SPEECH RECOGNITION
         if (window.hasOwnProperty('webkitSpeechRecognition') || window.hasOwnProperty('speechRecognition')) {
             recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.continuous = true; recognition.lang = "pt-BR";
@@ -255,7 +282,6 @@
         }
         function toggleDictation() { if (!recognition) return alert("Navegador não suporta voz."); isListening ? recognition.stop() : recognition.start(); isListening = !isListening; }
 
-        // FLUXO PRINCIPAL COM JUSBRASIL (SIMULADO VIA LLM PARA FORMATAÇÃO JURÍDICA)
         async function iniciarFluxo() {
             const fatos = document.getElementById('fatos').value;
             const btn = document.getElementById('btnGerar');
@@ -269,7 +295,6 @@
             document.getElementById('loading-state').classList.remove('hidden');
 
             try {
-                // Prompt otimizado para agir como middleware da API Jusbrasil
                 const prompt = `Aja como um integrador da API Jusbrasil. Analise os fatos: "${fatos}". 
                 Retorne um JSON: {
                     "exito": 88, 

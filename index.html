@@ -41,31 +41,6 @@
         .juris-item input:checked + div { border-color: #4f46e5; background-color: #f5f3ff; }
         
         .jus-badge { background: #0047bb; color: white; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; }
-
-        /* NOVOS ESTILOS DE BOTÕES CLEAN */
-        .btn-modern {
-            @apply flex items-center justify-center transition-all duration-200 font-semibold tracking-tight;
-            border-radius: 10px;
-        }
-        .btn-primary {
-            background-color: #4f46e5;
-            color: white;
-            box-shadow: 0 4px 10px -2px rgba(79, 70, 229, 0.2);
-        }
-        .btn-primary:hover { background-color: #4338ca; transform: translateY(-1px); }
-        .btn-primary:active { transform: translateY(0); }
-
-        .btn-secondary {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            color: #475569;
-        }
-        .btn-secondary:hover { background-color: #f1f5f9; color: #1e293b; }
-
-        .btn-ghost {
-            @apply text-[10px] font-bold uppercase tracking-wider transition-opacity;
-        }
-        .btn-ghost:hover { opacity: 0.7; }
     </style>
 </head>
 <body class="bg-[#fcfcfd] text-slate-800 flex h-screen overflow-hidden">
@@ -105,7 +80,7 @@
                         <p class="text-[9px] font-bold text-slate-400 uppercase leading-none">Saldo Petições</p>
                         <p class="text-sm font-bold text-indigo-600">12 disponíveis</p>
                     </div>
-                    <button onclick="abrirPagamento()" class="bg-white p-1.5 rounded-lg shadow-sm border border-slate-100 hover:text-indigo-600 transition-all active:scale-95">
+                    <button onclick="abrirPagamento()" class="bg-white p-1.5 rounded-lg shadow-sm hover:text-indigo-600 transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                     </button>
                 </div>
@@ -159,7 +134,7 @@
                                     <textarea id="fatos" rows="7" placeholder="Descreva os fatos para iniciar..." class="w-full mt-2 p-4 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none text-sm leading-relaxed font-medium"></textarea>
                                 </div>
 
-                                <button onclick="iniciarFluxo()" id="btnGerar" class="btn-modern btn-primary w-full py-4 text-sm">
+                                <button onclick="iniciarFluxo()" id="btnGerar" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl shadow-xl shadow-indigo-100 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
                                     Iniciar Agora
                                 </button>
                             </div>
@@ -169,14 +144,14 @@
                     <div id="document-container" class="bg-white rounded-[32px] shadow-sm flex flex-col h-[600px] overflow-hidden border border-slate-100 transition-all duration-300">
                         <div class="p-6 bg-slate-50/50 border-b border-slate-100 flex justify-between items-center px-8 shrink-0">
                             <div class="flex items-center gap-3">
-                                <button onclick="toggleExpand()" title="Expandir" class="btn-modern btn-secondary p-2">
+                                <button onclick="toggleExpand()" title="Expandir" class="p-2 bg-white border border-slate-200 rounded-lg text-slate-500 hover:text-indigo-600 transition-all active:scale-90">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
                                 </button>
                                 <span id="label-view" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Inteligência 24/7</span>
                             </div>
-                            <div class="flex gap-6">
-                                <button onclick="salvarMinuta()" class="btn-ghost text-emerald-600">Salvar</button>
-                                <button onclick="copyText()" class="btn-ghost text-indigo-600">Copiar</button>
+                            <div class="flex gap-4">
+                                <button onclick="salvarMinuta()" class="text-[10px] font-bold text-emerald-600 hover:text-emerald-800 uppercase">Salvar</button>
+                                <button onclick="copyText()" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 uppercase">Copiar</button>
                             </div>
                         </div>
                         
@@ -221,7 +196,7 @@
                                     </div>
                                     <p id="risco-text" class="text-xs leading-relaxed font-light">Conectando aos servidores...</p>
                                 </div>
-                                <button onclick="mostrarSelecaoJuris()" class="btn-modern btn-primary w-full py-4 text-sm bg-slate-900 hover:bg-black">Explorar Acórdãos & Redigir</button>
+                                <button onclick="mostrarSelecaoJuris()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-black transition-all">Explorar Acórdãos & Redigir</button>
                             </div>
 
                             <div id="loading-state" class="hidden m-auto text-center">
@@ -237,7 +212,7 @@
                                     <span class="text-[10px] text-slate-400 font-bold">FONTE: JUSBRASIL</span>
                                 </div>
                                 <div id="juris-list" class="space-y-3"></div>
-                                <button id="btnGerarFinal" onclick="gerarDocumentoFinal()" class="btn-modern btn-primary w-full py-4 text-sm disabled:opacity-50">Redigir Peça com Estes Precedentes</button>
+                                <button id="btnGerarFinal" onclick="gerarDocumentoFinal()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold disabled:opacity-50">Redigir Peça com Estes Precedentes</button>
                             </div>
 
                             <div id="editor-wrapper" class="hidden h-full flex flex-col"><div id="editor-container"></div></div>

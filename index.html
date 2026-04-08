@@ -25,7 +25,6 @@
         .mic-active { color: #ef4444 !important; animation: pulse-mic 1.5s infinite; font-weight: bold; }
         @keyframes pulse-mic { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         
-        /* Gráfico de Jurimetria */
         .circle-progress { fill: none; stroke: #4f46e5; stroke-width: 8; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dasharray 1s ease-in-out; }
         .circle-bg { fill: none; stroke: #f1f5f9; stroke-width: 8; }
 
@@ -60,8 +59,8 @@
             <a href="#" data-label="Processos" class="sidebar-item text-slate-400 hover:text-indigo-600 flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             </a>
-            <a href="#" data-label="Pagamentos" class="sidebar-item text-slate-400 hover:text-indigo-600 flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+            <a href="javascript:void(0)" onclick="abrirPagamento()" data-label="Pagamentos (PagSeguro)" class="sidebar-item text-slate-400 hover:text-emerald-500 flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
             </a>
         </nav>
     </aside>
@@ -209,7 +208,14 @@
         }
         initQuill();
 
-        // Ditado por Voz (Preservado)
+        // PagSeguro Integration
+        function abrirPagamento() {
+            // Aqui você redirecionaria para o checkout do PagSeguro
+            alert("Redirecionando para o ambiente seguro PagSeguro...");
+            window.open("https://pagseguro.uol.com.br/", "_blank");
+        }
+
+        // Ditado por Voz
         if (window.hasOwnProperty('webkitSpeechRecognition') || window.hasOwnProperty('speechRecognition')) {
             recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.continuous = true; recognition.lang = "pt-BR";
@@ -223,7 +229,6 @@
         }
         function toggleDictation() { if (!recognition) return alert("Não suportado."); isListening ? recognition.stop() : recognition.start(); isListening = !isListening; }
 
-        // Fluxo de Jurimetria (Ponto 2)
         async function iniciarFluxo() {
             const fatos = document.getElementById('fatos').value;
             if (!fatos) return alert("Descreva o caso.");
@@ -297,7 +302,10 @@
 
         function toggleExpand() { document.getElementById('document-container').classList.toggle('expand-mode'); }
         function copyText() { navigator.clipboard.writeText(quill.getText()); alert("Copiado!"); }
-        function salvarMinuta() { alert("Salvo no sistema!"); }
+        function salvarMinuta() { 
+            // Exemplo de uso do protocolo PagSeguro ao salvar se for uma função premium
+            alert("Minuta salva! Processando registro via PagSeguro..."); 
+        }
     </script>
 </body>
 </html>

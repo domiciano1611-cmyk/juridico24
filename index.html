@@ -41,6 +41,29 @@
         100% { transform: scale(1) rotate(360deg); opacity: 0.8; }
     }
 
+        /* --- DARK MODE LOGIC --- */
+body.dark-mode { background-color: #0f172a; color: #f1f5f9; }
+
+.dark-mode aside, 
+.dark-mode header,
+.dark-mode #juridico-chat,
+.dark-mode .login-card { background-color: #1e293b !important; border-color: #334155 !important; }
+
+.dark-mode h2, .dark-mode h1, .dark-mode label { color: #f1f5f9 !important; }
+.dark-mode p, .dark-mode .text-slate-500 { color: #94a3b8 !important; }
+
+/* Mantendo a Folha A4 legível no Dark Mode */
+.dark-mode .ql-container.ql-snow { background: #0f172a !important; }
+.dark-mode .ql-toolbar.ql-snow { background: #1e293b !important; border-color: #334155 !important; }
+.dark-mode .ql-editor { background: #ffffff !important; color: #1a1a1a !important; } /* A folha permanece branca para visualização real */
+
+/* Inputs e Cards no Dark Mode */
+.dark-mode select, 
+.dark-mode input, 
+.dark-mode textarea { background-color: #334155 !important; color: #f1f5f9 !important; border: 1px solid #475569 !important; }
+.dark-mode .bg-white { background-color: #1e293b !important; }
+.dark-mode .bg-slate-50 { background-color: #334155 !important; }
+
         /* --- CHAT ASSISTENTE JURÍDICO --- */
 #juridico-chat {
     position: fixed;
@@ -222,6 +245,11 @@
             <a href="#" data-label="Clientes" class="sidebar-item text-slate-400 hover:text-indigo-600 flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             </a>
+            <a href="#" data-label="Processos" class="sidebar-item text-slate-400 hover:text-indigo-600 flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+    </svg>
+</a>
             <a href="javascript:void(0)" onclick="abrirPagamento()" data-label="Pagamentos" class="sidebar-item text-slate-400 hover:text-emerald-500 flex items-center justify-center h-12 w-12 mx-auto rounded-xl transition-all">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
             </a>
@@ -245,6 +273,12 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                     </button>
                 </div>
+
+                <button onclick="toggleDarkMode()" class="p-2 text-slate-400 hover:text-amber-500 transition-colors bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100">
+    <svg id="sun-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707m12.728 12.728L12 12z"></path>
+    </svg>
+</button>
 
                 <button onclick="toggleChat()" class="p-2 text-slate-400 hover:text-indigo-600 transition-colors bg-slate-50 rounded-xl border border-slate-100">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -632,6 +666,19 @@ async function enviarDuvida() {
 document.getElementById('chat-input')?.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') enviarDuvida();
 });
+    </script>
+
+    <script>
+        function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
+
+// Manter preferência ao recarregar
+if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+}
     </script>
     
 </body>

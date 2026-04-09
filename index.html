@@ -10,66 +10,96 @@
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .sidebar-item { position: relative; }
-        .sidebar-item::after {
-            content: attr(data-label); position: absolute; left: 110%; top: 50%; transform: translateY(-50%);
-            background: #1e293b; color: white; padding: 4px 10px; border-radius: 6px; font-size: 12px;
-            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 100;
-        }
-        .sidebar-item:hover::after { opacity: 1; }
-        .active-menu { background-color: #4f46e5; color: white !important; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
-        .glass-header { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(226, 232, 240, 0.8); }
-        .expand-mode { position: fixed; inset: 20px; z-index: 100; height: calc(100vh - 40px) !important; width: calc(100vw - 40px) !important; }
-        
-        .mic-active { color: #ef4444 !important; animation: pulse-mic 1.5s infinite; font-weight: bold; }
-        @keyframes pulse-mic { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-        
-        .circle-progress { fill: none; stroke: #4f46e5; stroke-width: 8; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dasharray 1s ease-in-out; }
-        .circle-bg { fill: none; stroke: #f1f5f9; stroke-width: 8; }
+    /* Reset e Fonte Global */
+    body { 
+        font-family: 'Plus Jakarta Sans', sans-serif; 
+        background-color: #f1f5f9;
+    }
 
-        .loading-logo { animation: rotate-pulse 2s infinite ease-in-out; }
-        @keyframes rotate-pulse {
-            0% { transform: scale(1) rotate(0deg); opacity: 0.8; }
-            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
-            100% { transform: scale(1) rotate(360deg); opacity: 0.8; }
-        }
+    /* Sidebar e Navegação */
+    .sidebar-item { position: relative; }
+    .sidebar-item::after {
+        content: attr(data-label); position: absolute; left: 110%; top: 50%; transform: translateY(-50%);
+        background: #1e293b; color: white; padding: 4px 10px; border-radius: 6px; font-size: 12px;
+        white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 100;
+    }
+    .sidebar-item:hover::after { opacity: 1; }
+    .active-menu { background-color: #4f46e5; color: white !important; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
+    
+    /* Header e Layout */
+    .glass-header { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(226, 232, 240, 0.8); }
+    .expand-mode { position: fixed; inset: 20px; z-index: 100; height: calc(100vh - 40px) !important; width: calc(100vw - 40px) !important; }
+    
+    /* Microfone e Animações de Feedback */
+    .mic-active { color: #ef4444 !important; animation: pulse-mic 1.5s infinite; font-weight: bold; }
+    @keyframes pulse-mic { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    
+    .loading-logo { animation: rotate-pulse 2s infinite ease-in-out; }
+    @keyframes rotate-pulse {
+        0% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+        50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+        100% { transform: scale(1) rotate(360deg); opacity: 0.8; }
+    }
 
-        #editor-container { height: 100%; border: none !important; font-family: 'serif'; font-size: 16px; }
-        .ql-toolbar.ql-snow { border: none !important; border-bottom: 1px solid #f1f5f9 !important; background: #fff; }
-        .ql-editor { padding: 30px !important; }
-        .juris-item input:checked + div { border-color: #4f46e5; background-color: #f5f3ff; }
-        
-        .jus-badge { background: #0047bb; color: white; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; }
+    /* Elementos de Jurimetria */
+    .circle-progress { fill: none; stroke: #4f46e5; stroke-width: 8; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dasharray 1s ease-in-out; }
+    .circle-bg { fill: none; stroke: #f1f5f9; stroke-width: 8; }
+    .jus-badge { background: #0047bb; color: white; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; }
+    .juris-item input:checked + div { border-color: #4f46e5; background-color: #f5f3ff; }
 
-        /* Simula uma folha A4 no editor */
-.ql-container.ql-snow {
-    border: none !important;
-    background: #f8fafc; /* Fundo cinza claro fora da folha */
-    display: flex;
-    justify-content: center;
-    padding-top: 20px;
-}
+    /* --- CONFIGURAÇÃO PROFISSIONAL DO EDITOR (FOLHA A4) --- */
+    
+    /* Toolbar fixa no topo da folha */
+    .ql-toolbar.ql-snow { 
+        border: none !important; 
+        border-bottom: 1px solid #e2e8f0 !important; 
+        background: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+    }
 
-.ql-editor {
-    width: 210mm; /* Largura A4 */
-    min-height: 297mm;
-    padding: 2.5cm 2.5cm !important; /* Margens padrão */
-    background: white;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    margin: 0 auto;
-    font-family: 'Times New Roman', Times, serif; /* Fonte clássica jurídica */
-    font-size: 12pt;
-    line-height: 1.5;
-}
+    /* Container que simula a "mesa" atrás do papel */
+    .ql-container.ql-snow {
+        border: none !important;
+        background: #f1f5f9; 
+        display: flex;
+        justify-content: center;
+        padding: 40px 0;
+        overflow-y: auto;
+    }
 
-        /* Estilos do Login */
-        #login-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center; }
-        .login-card { width: 950px; height: 600px; background: white; border-radius: 24px; display: flex; overflow: hidden; shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
-        .login-left { flex: 1; padding: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        .login-right { flex: 1; background: linear-gradient(135deg, #1a0b2e 0%, #4a148c 100%); padding: 60px; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
-        .blur-bg { filter: blur(12px); pointer-events: none; user-select: none; }
-    </style>
+    /* A "Folha de Papel" A4 Oficial */
+    .ql-editor {
+        width: 210mm; /* Largura Real A4 */
+        min-height: 297mm; /* Altura Real A4 */
+        padding: 3.0cm 2.0cm 2.0cm 3.0cm !important; /* Margens Oficiais: Topo 3, Dir 2, Base 2, Esq 3 */
+        background: white;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 50px;
+        font-family: 'Times New Roman', Times, serif; /* Fonte Padrão Jurídica */
+        font-size: 12pt;
+        line-height: 1.5;
+        color: #1a1a1a;
+        text-align: justify;
+    }
+
+    /* Estilização para manter parágrafos no padrão profissional */
+    .ql-editor p {
+        margin-bottom: 15px;
+        text-indent: 1.5cm; /* Recuo na primeira linha */
+    }
+
+    /* Login Overlay */
+    #login-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center; }
+    .login-card { width: 950px; height: 600px; background: white; border-radius: 24px; display: flex; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+    .login-left { flex: 1; padding: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .login-right { flex: 1; background: linear-gradient(135deg, #1a0b2e 0%, #4a148c 100%); padding: 60px; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+    .blur-bg { filter: blur(12px); pointer-events: none; user-select: none; }
+</style>
+    
 </head>
 <body class="bg-[#fcfcfd] text-slate-800 flex h-screen overflow-hidden">
 
@@ -334,202 +364,199 @@
     </main>
 
     <script>
-        const GROQ_API_KEY = "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";
-        
-        let quill;
-        let recognition;
-        let isListening = false;
-        let lastJurimetriaData = null;
-
-        function realizarLogin() {
-            document.getElementById('login-overlay').style.display = 'none';
-            document.getElementById('main-sidebar').classList.remove('blur-bg');
-            document.getElementById('main-content').classList.remove('blur-bg');
-        }
-
-        function initQuill() {
-            quill = new Quill('#editor-container', { 
-                modules: { 
-                    toolbar: [
-                        [{ 'header': [1, 2, 3, false] }], 
-                        ['bold', 'italic', 'underline'], 
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                        ['clean']
-                    ] 
-                }, 
-                theme: 'snow' 
-            });
-        }
-        initQuill();
-
-        function abrirPagamento() {
-            const confirmacao = confirm("Deseja iniciar o pagamento seguro via PagSeguro para créditos de petição?");
-            if(confirmacao) {
-                window.open("https://pagseguro.uol.com.br/", "_blank");
-            }
-        }
-
-        if (window.hasOwnProperty('webkitSpeechRecognition') || window.hasOwnProperty('speechRecognition')) {
-            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.continuous = true; recognition.lang = "pt-BR";
-            recognition.onresult = (e) => {
-                let transcript = '';
-                for (let i = e.resultIndex; i < e.results.length; ++i) { if (e.results[i].isFinal) transcript += e.results[i][0].transcript; }
-                document.getElementById('fatos').value += (document.getElementById('fatos').value ? " " : "") + transcript;
-            };
-            recognition.onstart = () => { document.getElementById('micBtn').classList.add('mic-active'); document.getElementById('micBtn').innerHTML = '● OUVINDO...'; };
-            recognition.onend = () => { document.getElementById('micBtn').classList.remove('mic-active'); document.getElementById('micBtn').innerHTML = 'DITAR ÁUDIO'; isListening = false; };
-        }
-        function toggleDictation() { if (!recognition) return alert("Navegador não suporta voz."); isListening ? recognition.stop() : recognition.start(); isListening = !isListening; }
-
-        async function iniciarFluxo() {
-            const fatos = document.getElementById('fatos').value;
-            const btn = document.getElementById('btnGerar');
-            if (!fatos) return alert("Por favor, descreva o caso para a consulta.");
-
-            btn.disabled = true;
-            btn.innerText = "Consultando...";
-
-            document.getElementById('waiting-state').classList.add('hidden');
-            document.getElementById('jurimetria-state').classList.add('hidden');
-            document.getElementById('loading-state').classList.remove('hidden');
-
-            try {
-                const prompt = `Aja como um integrador da API Jusbrasil. Analise os fatos: "${fatos}". 
-                Retorne um JSON: {
-                    "exito": 88, 
-                    "tempo_medio": "12 precedentes exatos", 
-                    "complexidade": "STJ/TJSP", 
-                    "risco": "A jurisprudência atual do Jusbrasil aponta uma tendência favorável à tese de danos morais em casos similares, com média indenizatória de R$ 10.000,00.", 
-                    "jurisprudencias": [
-                        {"titulo": "REsp 1.843.201 - Jusbrasil", "ementa": "Responsabilidade Civil. Consumidor. Inversão do ônus da prova aplicada conforme art. 6º VIII do CDC."},
-                        {"titulo": "Apelação Cível TJ-SP - 100234-88", "ementa": "Dano in re ipsa configurado por falha na prestação de serviço bancário."},
-                        {"titulo": "Súmula 479 STJ", "ementa": "As instituições financeiras respondem objetivamente pelos danos gerados por fortuito interno."}
-                    ]
-                }`;
-
-                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${GROQ_API_KEY}` },
-                    body: JSON.stringify({ 
-                        model: "llama-3.3-70b-versatile", 
-                        messages: [{ role: "user", content: prompt }], 
-                        response_format: { type: "json_object" } 
-                    })
-                });
-                
-                const data = await res.json();
-                lastJurimetriaData = JSON.parse(data.choices[0].message.content);
-                exibirJurimetria(lastJurimetriaData);
-            } catch (e) { 
-                alert("Falha na conexão."); 
-                document.getElementById('loading-state').classList.add('hidden');
-                document.getElementById('waiting-state').classList.remove('hidden');
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "Iniciar Agora";
-            }
-        }
-
-        function exibirJurimetria(dados) {
-            document.getElementById('loading-state').classList.add('hidden');
-            document.getElementById('jurimetria-state').classList.remove('hidden');
-            const circle = document.getElementById('score-circle');
-            const offset = 339.29 - (dados.exito / 100 * 339.29);
-            circle.style.strokeDasharray = `${339.29 - offset} 339.29`;
-            document.getElementById('score-text').innerText = dados.exito + "%";
-            document.getElementById('tempo-text').innerText = dados.tempo_medio;
-            document.getElementById('complex-text').innerText = dados.complexidade;
-            document.getElementById('risco-text').innerText = dados.risco;
-        }
-
-        function mostrarSelecaoJuris() {
-            document.getElementById('jurimetria-state').classList.add('hidden');
-            document.getElementById('selection-state').classList.remove('hidden');
-            const container = document.getElementById('juris-list');
-            container.innerHTML = '';
-            lastJurimetriaData.jurisprudencias.forEach((item) => {
-                const label = document.createElement('label');
-                label.className = 'juris-item block cursor-pointer';
-                label.innerHTML = `
-                    <input type="checkbox" class="hidden peer" checked>
-                    <div class="p-4 border border-slate-100 rounded-2xl bg-white hover:border-indigo-200 transition-all peer-checked:ring-2 peer-checked:ring-indigo-500 peer-checked:border-transparent">
-                        <div class="flex justify-between items-start">
-                            <h4 class="text-[10px] font-bold text-indigo-600 uppercase">${item.titulo}</h4>
-                        </div>
-                        <p class="text-xs text-slate-600 mt-2 italic">"${item.ementa}"</p>
-                    </div>`;
-                label.dataset.texto = item.titulo + ": " + item.ementa;
-                container.appendChild(label);
-            });
-        }
-
-        async function gerarDocumentoFinal() {
-    const btn = document.getElementById('btnGerarFinal');
-    const selecionados = Array.from(document.querySelectorAll('.juris-item input:checked')).map(i => i.closest('.juris-item').dataset.texto);
-    const areaDireito = document.getElementById('tipoAcao').value;
-    const fatosCaso = document.getElementById('fatos').value;
+    const GROQ_API_KEY = "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";
     
-    // Captura dos novos campos
-    const nomeRequerente = document.getElementById('cliente').value || "[NOME DO REQUERENTE]";
-    const nomeRequerido = document.getElementById('reu').value || "[NOME DO REQUERIDO]";
+    let quill;
+    let recognition;
+    let isListening = false;
+    let lastJurimetriaData = null;
 
-    btn.disabled = true;
-    document.getElementById('selection-state').classList.add('hidden');
-    document.getElementById('loading-state').classList.remove('hidden');
-
-    // Prompt com a Qualificação das Partes inclusa
-    const prompt = `Aja como um advogado sênior especialista em redação jurídica. 
-    Escreva uma PETIÇÃO INICIAL completa seguindo rigorosamente estas diretrizes de formatação:
-    
-    1. ESTRUTURA:
-       - Endereçamento (com espaço de 10 linhas após o Excelentíssimo).
-       - Qualificação das partes em parágrafos separados, utilizando os nomes fornecidos abaixo.
-       - Títulos das seções em negrito e caixa alta (ex: I - DOS FATOS).
-       - Pule 2 linhas entre cada tópico.
-    
-    2. ESTILO:
-       - Use espaçamento entre linhas de 1.5.
-       - Use recuo de parágrafo de 1.5cm.
-       - Texto justificado.
-    
-    DADOS DO PROCESSO:
-    Requerente (Autor): ${nomeRequerente}
-    Requerido (Réu): ${nomeRequerido}
-    Área do Direito: ${areaDireito}.
-    Fatos do Caso: ${fatosCaso}.
-    Jurisprudências para embasamento: ${selecionados.join(' | ')}.
-    
-    Retorne o conteúdo em HTML puro, usando tags <p style="text-indent: 1.5cm; line-height: 1.5; margin-bottom: 15px; text-align: justify;"> para os parágrafos e <br> para os espaços em branco entre seções.`;
-
-    try {
-        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${GROQ_API_KEY}` },
-            body: JSON.stringify({ 
-                model: "llama-3.3-70b-versatile", 
-                messages: [{ role: "user", content: prompt }],
-                temperature: 0.5 
-            })
-        });
-        const data = await res.json();
-        
-        document.getElementById('loading-state').classList.add('hidden');
-        document.getElementById('editor-wrapper').classList.remove('hidden');
-        
-        // Insere o conteúdo no Quill
-        quill.clipboard.dangerouslyPasteHTML(data.choices[0].message.content);
-        
-    } catch (e) { 
-        alert("Erro na redação. Verifique sua conexão."); 
-    } finally {
-        btn.disabled = false;
+    function realizarLogin() {
+        document.getElementById('login-overlay').style.display = 'none';
+        document.getElementById('main-sidebar').classList.remove('blur-bg');
+        document.getElementById('main-content').classList.remove('blur-bg');
     }
-}
 
-        function toggleExpand() { document.getElementById('document-container').classList.toggle('expand-mode'); }
-        function copyText() { navigator.clipboard.writeText(quill.getText()); alert("Copiado!"); }
-        function salvarMinuta() { alert("Salvo!"); }
-    </script>
+    function initQuill() {
+        quill = new Quill('#editor-container', { 
+            modules: { 
+                toolbar: [
+                    [{ 'header': [1, 2, 3, false] }], 
+                    ['bold', 'italic', 'underline'], 
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['clean']
+                ] 
+            }, 
+            theme: 'snow' 
+        });
+    }
+    initQuill();
+
+    function abrirPagamento() {
+        const confirmacao = confirm("Deseja iniciar o pagamento seguro via PagSeguro para créditos de petição?");
+        if(confirmacao) {
+            window.open("[https://pagseguro.uol.com.br/](https://pagseguro.uol.com.br/)", "_blank");
+        }
+    }
+
+    // Reconhecimento de Voz
+    if (window.hasOwnProperty('webkitSpeechRecognition') || window.hasOwnProperty('speechRecognition')) {
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.continuous = true; recognition.lang = "pt-BR";
+        recognition.onresult = (e) => {
+            let transcript = '';
+            for (let i = e.resultIndex; i < e.results.length; ++i) { if (e.results[i].isFinal) transcript += e.results[i][0].transcript; }
+            document.getElementById('fatos').value += (document.getElementById('fatos').value ? " " : "") + transcript;
+        };
+        recognition.onstart = () => { document.getElementById('micBtn').classList.add('mic-active'); document.getElementById('micBtn').innerHTML = '● OUVINDO...'; };
+        recognition.onend = () => { document.getElementById('micBtn').classList.remove('mic-active'); document.getElementById('micBtn').innerHTML = 'DITAR ÁUDIO'; isListening = false; };
+    }
+    function toggleDictation() { if (!recognition) return alert("Navegador não suporta voz."); isListening ? recognition.stop() : recognition.start(); isListening = !isListening; }
+
+    async function iniciarFluxo() {
+        const fatos = document.getElementById('fatos').value;
+        const btn = document.getElementById('btnGerar');
+        if (!fatos) return alert("Por favor, descreva o caso para a consulta.");
+
+        btn.disabled = true;
+        btn.innerText = "Consultando...";
+
+        document.getElementById('waiting-state').classList.add('hidden');
+        document.getElementById('jurimetria-state').classList.add('hidden');
+        document.getElementById('loading-state').classList.remove('hidden');
+
+        try {
+            const prompt = `Aja como um integrador da API Jusbrasil. Analise os fatos: "${fatos}". 
+            Retorne um JSON: {
+                "exito": 88, 
+                "tempo_medio": "12 precedentes exatos", 
+                "complexidade": "STJ/TJSP", 
+                "risco": "A jurisprudência atual do Jusbrasil aponta uma tendência favorável à tese de danos morais em casos similares, com média indenizatória de R$ 10.000,00.", 
+                "jurisprudencias": [
+                    {"titulo": "REsp 1.843.201 - Jusbrasil", "ementa": "Responsabilidade Civil. Consumidor. Inversão do ônus da prova aplicada conforme art. 6º VIII do CDC."},
+                    {"titulo": "Apelação Cível TJ-SP - 100234-88", "ementa": "Dano in re ipsa configurado por falha na prestação de serviço bancário."},
+                    {"titulo": "Súmula 479 STJ", "ementa": "As instituições financeiras respondem objetivamente pelos danos gerados por fortuito interno."}
+                ]
+            }`;
+
+            const res = await fetch("[https://api.groq.com/openai/v1/chat/completions](https://api.groq.com/openai/v1/chat/completions)", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${GROQ_API_KEY}` },
+                body: JSON.stringify({ 
+                    model: "llama-3.3-70b-versatile", 
+                    messages: [{ role: "user", content: prompt }], 
+                    response_format: { type: "json_object" } 
+                })
+            });
+            
+            const data = await res.json();
+            lastJurimetriaData = JSON.parse(data.choices[0].message.content);
+            exibirJurimetria(lastJurimetriaData);
+        } catch (e) { 
+            alert("Falha na conexão."); 
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('waiting-state').classList.remove('hidden');
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Iniciar Agora";
+        }
+    }
+
+    function exibirJurimetria(dados) {
+        document.getElementById('loading-state').classList.add('hidden');
+        document.getElementById('jurimetria-state').classList.remove('hidden');
+        const circle = document.getElementById('score-circle');
+        const offset = 339.29 - (dados.exito / 100 * 339.29);
+        circle.style.strokeDasharray = `${339.29 - offset} 339.29`;
+        document.getElementById('score-text').innerText = dados.exito + "%";
+        document.getElementById('tempo-text').innerText = dados.tempo_medio;
+        document.getElementById('complex-text').innerText = dados.complexidade;
+        document.getElementById('risco-text').innerText = dados.risco;
+    }
+
+    function mostrarSelecaoJuris() {
+        document.getElementById('jurimetria-state').classList.add('hidden');
+        document.getElementById('selection-state').classList.remove('hidden');
+        const container = document.getElementById('juris-list');
+        container.innerHTML = '';
+        lastJurimetriaData.jurisprudencias.forEach((item) => {
+            const label = document.createElement('label');
+            label.className = 'juris-item block cursor-pointer';
+            label.innerHTML = `
+                <input type="checkbox" class="hidden peer" checked>
+                <div class="p-4 border border-slate-100 rounded-2xl bg-white hover:border-indigo-200 transition-all peer-checked:ring-2 peer-checked:ring-indigo-500 peer-checked:border-transparent">
+                    <div class="flex justify-between items-start">
+                        <h4 class="text-[10px] font-bold text-indigo-600 uppercase">${item.titulo}</h4>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2 italic">"${item.ementa}"</p>
+                </div>`;
+            label.dataset.texto = item.titulo + ": " + item.ementa;
+            container.appendChild(label);
+        });
+    }
+
+    async function gerarDocumentoFinal() {
+        const btn = document.getElementById('btnGerarFinal');
+        const selecionados = Array.from(document.querySelectorAll('.juris-item input:checked')).map(i => i.closest('.juris-item').dataset.texto);
+        const areaDireito = document.getElementById('tipoAcao').value;
+        const fatosCaso = document.getElementById('fatos').value;
+        const nomeRequerente = document.getElementById('cliente').value || "[NOME DO REQUERENTE]";
+        const nomeRequerido = document.getElementById('reu').value || "[NOME DO REQUERIDO]";
+
+        btn.disabled = true;
+        document.getElementById('selection-state').classList.add('hidden');
+        document.getElementById('loading-state').classList.remove('hidden');
+
+        // Prompt Otimizado para Formato Word/Oficial
+        const prompt = `Aja como um advogado sênior experiente. Escreva uma PETIÇÃO INICIAL completa e profissional.
+        
+        DIRETRIZES TÉCNICAS:
+        1. ENDEREÇAMENTO: Comece com o Excelentíssimo Senhor Doutor Juiz de Direito da __ Vara Cível da Comarca de __.
+        2. ESPAÇAMENTO: Após o endereçamento, pule EXATAMENTE 10 linhas em branco (use dez tags <br>).
+        3. QUALIFICAÇÃO: Qualifique ${nomeRequerente} como requerente e ${nomeRequerido} como requerido de forma profissional.
+        4. TÍTULOS: Use seções em Negrito e Caixa Alta (ex: I - DOS FATOS). Pule 2 linhas entre tópicos.
+        5. FORMATAÇÃO HTML: Use <p style="text-indent: 1.5cm; line-height: 1.5; text-align: justify; margin-bottom: 12px;"> para todos os parágrafos.
+        
+        DADOS DO CASO:
+        Área: ${areaDireito}
+        Fatos: ${fatosCaso}
+        Base Legal: ${selecionados.join(' | ')}
+        
+        Retorne apenas o código HTML, sem explicações e sem blocos de código Markdown.`;
+
+        try {
+            const res = await fetch("[https://api.groq.com/openai/v1/chat/completions](https://api.groq.com/openai/v1/chat/completions)", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${GROQ_API_KEY}` },
+                body: JSON.stringify({ 
+                    model: "llama-3.3-70b-versatile", 
+                    messages: [{ role: "user", content: prompt }],
+                    temperature: 0.3 
+                })
+            });
+            
+            const data = await res.json();
+            let htmlFinal = data.choices[0].message.content;
+
+            // Limpeza de segurança caso a IA envie Markdown
+            htmlFinal = htmlFinal.replace(/```html|```/g, "").trim();
+            
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('editor-wrapper').classList.remove('hidden');
+            
+            // Inserção no Quill
+            quill.clipboard.dangerouslyPasteHTML(htmlFinal);
+            
+        } catch (e) { 
+            alert("Erro na geração do documento."); 
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    function toggleExpand() { document.getElementById('document-container').classList.toggle('expand-mode'); }
+    function copyText() { navigator.clipboard.writeText(quill.getText()); alert("Copiado!"); }
+    function salvarMinuta() { alert("Salvo!"); }
+</script>
 </body>
 </html>

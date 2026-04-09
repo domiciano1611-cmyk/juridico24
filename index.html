@@ -469,32 +469,38 @@
     const selecionados = Array.from(document.querySelectorAll('.juris-item input:checked')).map(i => i.closest('.juris-item').dataset.texto);
     const areaDireito = document.getElementById('tipoAcao').value;
     const fatosCaso = document.getElementById('fatos').value;
+    
+    // Captura dos novos campos
+    const nomeRequerente = document.getElementById('cliente').value || "[NOME DO REQUERENTE]";
+    const nomeRequerido = document.getElementById('reu').value || "[NOME DO REQUERIDO]";
 
     btn.disabled = true;
     document.getElementById('selection-state').classList.add('hidden');
     document.getElementById('loading-state').classList.remove('hidden');
 
-    // Prompt Refinado para Formatação Profissional
+    // Prompt com a Qualificação das Partes inclusa
     const prompt = `Aja como um advogado sênior especialista em redação jurídica. 
     Escreva uma PETIÇÃO INICIAL completa seguindo rigorosamente estas diretrizes de formatação:
     
     1. ESTRUTURA:
        - Endereçamento (com espaço de 10 linhas após o Excelentíssimo).
-       - Qualificação das partes em parágrafos separados.
+       - Qualificação das partes em parágrafos separados, utilizando os nomes fornecidos abaixo.
        - Títulos das seções em negrito e caixa alta (ex: I - DOS FATOS).
        - Pule 2 linhas entre cada tópico.
     
     2. ESTILO:
        - Use espaçamento entre linhas de 1.5.
-       - Use recuo de parágrafo.
+       - Use recuo de parágrafo de 1.5cm.
        - Texto justificado.
     
-    DADOS:
-    Área: ${areaDireito}.
-    Fatos: ${fatosCaso}.
-    Jurisprudências selecionadas: ${selecionados.join(' | ')}.
+    DADOS DO PROCESSO:
+    Requerente (Autor): ${nomeRequerente}
+    Requerido (Réu): ${nomeRequerido}
+    Área do Direito: ${areaDireito}.
+    Fatos do Caso: ${fatosCaso}.
+    Jurisprudências para embasamento: ${selecionados.join(' | ')}.
     
-    Retorne o conteúdo em HTML puro, usando tags <p style="text-indent: 1.5cm; line-height: 1.5; margin-bottom: 15px; text-align: justify;"> para os parágrafos e <br> para os espaços em branco.`;
+    Retorne o conteúdo em HTML puro, usando tags <p style="text-indent: 1.5cm; line-height: 1.5; margin-bottom: 15px; text-align: justify;"> para os parágrafos e <br> para os espaços em branco entre seções.`;
 
     try {
         const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -503,7 +509,7 @@
             body: JSON.stringify({ 
                 model: "llama-3.3-70b-versatile", 
                 messages: [{ role: "user", content: prompt }],
-                temperature: 0.5 // Menor temperatura para manter a sobriedade jurídica
+                temperature: 0.5 
             })
         });
         const data = await res.json();
@@ -511,11 +517,11 @@
         document.getElementById('loading-state').classList.add('hidden');
         document.getElementById('editor-wrapper').classList.remove('hidden');
         
-        // Insere o conteúdo formatado no Quill
+        // Insere o conteúdo no Quill
         quill.clipboard.dangerouslyPasteHTML(data.choices[0].message.content);
         
     } catch (e) { 
-        alert("Erro na redação. Verifique sua conexão ou chave de API."); 
+        alert("Erro na redação. Verifique sua conexão."); 
     } finally {
         btn.disabled = false;
     }

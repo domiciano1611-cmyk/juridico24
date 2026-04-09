@@ -41,6 +41,43 @@
         100% { transform: scale(1) rotate(360deg); opacity: 0.8; }
     }
 
+        /* --- CHAT ASSISTENTE JURÍDICO --- */
+#juridico-chat {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    height: 500px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    display: none; /* Inicia oculto */
+    flex-direction: column;
+    z-index: 999;
+    border: 1px solid #e2e8f0;
+}
+
+#chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.msg { padding: 8px 12px; border-radius: 12px; max-width: 85%; }
+.msg-ai { background: #f1f5f9; align-self: flex-start; color: #334155; }
+.msg-user { background: #4f46e5; align-self: flex-end; color: white; }
+
+.chat-input-area {
+    padding: 15px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    gap: 8px;
+}
+
     /* Elementos de Jurimetria */
     .circle-progress { fill: none; stroke: #4f46e5; stroke-width: 8; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dasharray 1s ease-in-out; }
     .circle-bg { fill: none; stroke: #f1f5f9; stroke-width: 8; }
@@ -204,6 +241,11 @@
                         <p class="text-[9px] font-bold text-slate-400 uppercase leading-none">Saldo Petições</p>
                         <p class="text-sm font-bold text-indigo-600">12 disponíveis</p>
                     </div>
+                    <button onclick="toggleChat()" class="p-2 text-slate-400 hover:text-indigo-600 transition-colors bg-slate-50 rounded-xl border border-slate-100">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+    </svg>
+</button>
                     <button onclick="abrirPagamento()" class="bg-white p-1.5 rounded-lg shadow-sm hover:text-indigo-600 transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                     </button>
@@ -362,6 +404,22 @@
             </footer>
         </div>
     </main>
+
+    <div id="juridico-chat">
+    <div class="p-4 border-b border-slate-100 bg-indigo-600 text-white rounded-t-[20px] flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-wider">Assistente Jurídico</span>
+        <button onclick="toggleChat()" class="hover:opacity-70">✕</button>
+    </div>
+    <div id="chat-messages">
+        <div class="msg msg-ai font-medium">Olá! Como posso ajudar na sua pesquisa jurídica hoje?</div>
+    </div>
+    <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Pergunte sobre leis ou códigos..." class="flex-1 text-xs outline-none bg-slate-50 p-2 rounded-lg border border-slate-200">
+        <button onclick="enviarDuvida()" class="bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </button>
+    </div>
+</div>
 
     <script>
     const GROQ_API_KEY = "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";
@@ -526,6 +584,54 @@
     function copyText() { navigator.clipboard.writeText(quill.getText()); alert("Copiado!"); }
     function salvarMinuta() { alert("Salvo!"); }
 </script>
+
+    <script>
+        function toggleChat() {
+    const chat = document.getElementById('juridico-chat');
+    chat.style.display = chat.style.display === 'flex' ? 'none' : 'flex';
+}
+
+async function enviarDuvida() {
+    const input = document.getElementById('chat-input');
+    const container = document.getElementById('chat-messages');
+    const pergunta = input.value.trim();
+
+    if (!pergunta) return;
+
+    // Adiciona pergunta do usuário na tela
+    container.innerHTML += `<div class="msg msg-user">${pergunta}</div>`;
+    input.value = '';
+    container.scrollTop = container.scrollHeight;
+
+    try {
+        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${GROQ_API_KEY}` },
+            body: JSON.stringify({ 
+                model: "llama-3.3-70b-versatile", 
+                messages: [
+                    { role: "system", content: "Você é um assistente jurídico especializado em leis brasileiras e doutrina. Seja conciso e cite artigos quando possível." },
+                    { role: "user", content: pergunta }
+                ],
+                temperature: 0.5 
+            })
+        });
+        
+        const data = await res.json();
+        const resposta = data.choices[0].message.content;
+
+        container.innerHTML += `<div class="msg msg-ai">${resposta}</div>`;
+        container.scrollTop = container.scrollHeight;
+    } catch (e) {
+        container.innerHTML += `<div class="msg msg-ai text-red-500">Erro ao consultar assistente.</div>`;
+    }
+}
+
+// Permitir enviar com Enter
+document.getElementById('chat-input')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') enviarDuvida();
+});
+    </script>
     
 </body>
 </html>

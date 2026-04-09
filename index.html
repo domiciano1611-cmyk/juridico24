@@ -42,6 +42,27 @@
         
         .jus-badge { background: #0047bb; color: white; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; }
 
+        /* Simula uma folha A4 no editor */
+.ql-container.ql-snow {
+    border: none !important;
+    background: #f8fafc; /* Fundo cinza claro fora da folha */
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+.ql-editor {
+    width: 210mm; /* Largura A4 */
+    min-height: 297mm;
+    padding: 2.5cm 2.5cm !important; /* Margens padrão */
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin: 0 auto;
+    font-family: 'Times New Roman', Times, serif; /* Fonte clássica jurídica */
+    font-size: 12pt;
+    line-height: 1.5;
+}
+
         /* Estilos do Login */
         #login-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center; }
         .login-card { width: 950px; height: 600px; background: white; border-radius: 24px; display: flex; overflow: hidden; shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
@@ -444,28 +465,61 @@
         }
 
         async function gerarDocumentoFinal() {
-            const btn = document.getElementById('btnGerarFinal');
-            const selecionados = Array.from(document.querySelectorAll('.juris-item input:checked')).map(i => i.closest('.juris-item').dataset.texto);
-            btn.disabled = true;
-            document.getElementById('selection-state').classList.add('hidden');
-            document.getElementById('loading-state').classList.remove('hidden');
-            const prompt = `Escreva uma Petição Inicial. Área: ${document.getElementById('tipoAcao').value}. Fatos: ${document.getElementById('fatos').value}. Jurisprudências: ${selecionados.join(' | ')}. Use HTML profissional.`;
-            try {
-                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${GROQ_API_KEY}` },
-                    body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{ role: "user", content: prompt }] })
-                });
-                const data = await res.json();
-                document.getElementById('loading-state').classList.add('hidden');
-                document.getElementById('editor-wrapper').classList.remove('hidden');
-                quill.clipboard.dangerouslyPasteHTML(data.choices[0].message.content);
-            } catch (e) { 
-                alert("Erro na redação."); 
-            } finally {
-                btn.disabled = false;
-            }
-        }
+    const btn = document.getElementById('btnGerarFinal');
+    const selecionados = Array.from(document.querySelectorAll('.juris-item input:checked')).map(i => i.closest('.juris-item').dataset.texto);
+    const areaDireito = document.getElementById('tipoAcao').value;
+    const fatosCaso = document.getElementById('fatos').value;
+
+    btn.disabled = true;
+    document.getElementById('selection-state').classList.add('hidden');
+    document.getElementById('loading-state').classList.remove('hidden');
+
+    // Prompt Refinado para Formatação Profissional
+    const prompt = `Aja como um advogado sênior especialista em redação jurídica. 
+    Escreva uma PETIÇÃO INICIAL completa seguindo rigorosamente estas diretrizes de formatação:
+    
+    1. ESTRUTURA:
+       - Endereçamento (com espaço de 10 linhas após o Excelentíssimo).
+       - Qualificação das partes em parágrafos separados.
+       - Títulos das seções em negrito e caixa alta (ex: I - DOS FATOS).
+       - Pule 2 linhas entre cada tópico.
+    
+    2. ESTILO:
+       - Use espaçamento entre linhas de 1.5.
+       - Use recuo de parágrafo.
+       - Texto justificado.
+    
+    DADOS:
+    Área: ${areaDireito}.
+    Fatos: ${fatosCaso}.
+    Jurisprudências selecionadas: ${selecionados.join(' | ')}.
+    
+    Retorne o conteúdo em HTML puro, usando tags <p style="text-indent: 1.5cm; line-height: 1.5; margin-bottom: 15px; text-align: justify;"> para os parágrafos e <br> para os espaços em branco.`;
+
+    try {
+        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${GROQ_API_KEY}` },
+            body: JSON.stringify({ 
+                model: "llama-3.3-70b-versatile", 
+                messages: [{ role: "user", content: prompt }],
+                temperature: 0.5 // Menor temperatura para manter a sobriedade jurídica
+            })
+        });
+        const data = await res.json();
+        
+        document.getElementById('loading-state').classList.add('hidden');
+        document.getElementById('editor-wrapper').classList.remove('hidden');
+        
+        // Insere o conteúdo formatado no Quill
+        quill.clipboard.dangerouslyPasteHTML(data.choices[0].message.content);
+        
+    } catch (e) { 
+        alert("Erro na redação. Verifique sua conexão ou chave de API."); 
+    } finally {
+        btn.disabled = false;
+    }
+}
 
         function toggleExpand() { document.getElementById('document-container').classList.toggle('expand-mode'); }
         function copyText() { navigator.clipboard.writeText(quill.getText()); alert("Copiado!"); }
